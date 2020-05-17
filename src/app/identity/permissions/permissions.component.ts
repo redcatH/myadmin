@@ -66,25 +66,23 @@ export class PermissionsComponent implements OnInit {
                       title: ps.displayName,
                       key: ps.name,
                       expanded: true,
-                      //checked:temp,
                       children: item.permissions
                         .filter(children => children.parentName == ps.name)
                         .map(cp => {
                           return {
                             title: cp.displayName,
-                            //checked: cp.isGranted,
                             key: cp.name,
                             isLeaf: true
                           };
                         })
                     };
-                    console.log(tempArray);
                     return tempArray;
                   })
               }
             ];
           });
           
+          //初始化选中的权限
           this.permissionQuery.permissionGroup$
             .pipe(
               mergeMap(arr => from(arr)),
@@ -93,16 +91,17 @@ export class PermissionsComponent implements OnInit {
             )
             .subscribe(r => {
               if (r.isGranted != undefined) {
-                if (r.isGranted && r.parentName != null)
+                if (r.isGranted && r.parentName != null) //r.parentName != null 这里是为了不设置根节点 让他有半选中状态
                   this.defaultCheckedKeys.push('' + r.name);
               }
             });
-          console.log(this.defaultCheckedKeys);
-          //console.log(this.permissionModel);
         });
       });
   }
 
+  CheckBoxChange(e){
+    console.log(e)
+  }
   clickChecked(e) {
     // console.log(this.tabs.nzSelectedIndex);
 
@@ -187,4 +186,5 @@ export class PermissionsComponent implements OnInit {
       // this.nzTreeComponent.getExpandedNodeList()
       ();
   }
+
 }

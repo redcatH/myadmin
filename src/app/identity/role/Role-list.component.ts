@@ -177,7 +177,7 @@ export class RoleListComponent implements OnInit {
             type: "primary",
             onClick: instance => {
               console.log("componentInstance", instance);
-              console.log(instance.permissionModel);
+              console.log(instance.defaultCheckedKeys);
               console.log()
               // if (instance.validateForm.valid) {
               //   this.api.createRole({
