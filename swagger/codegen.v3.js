@@ -2,7 +2,7 @@ const { codegen } = require('swagger-angular-codegen');
 
 codegen({
     methodNameMode: 'path',
-    remoteUrl: 'http://localhost:44316/swagger/v1/swagger.json',
+    remoteUrl: 'http://localhost:44351/swagger/v1/swagger.json',
     outputDir: './src/api',
     fileName: 'appService.ts',
     useStaticMethod: false,

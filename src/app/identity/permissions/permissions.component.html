@@ -1,0 +1,8 @@
+<nz-tabset #tabs [nzTabPosition]="position" [nzType]="'line'">
+  <nz-tab #nzTabComponent *ngFor="let tab of permissionModel" [nzTitle]="tab.title">
+    <label nz-checkbox [ngModel]="checked" (ngModelChange)="clickChecked($event)">Checked All</label>
+    <nz-divider></nz-divider>
+    <nz-tree #nzTreeComponent nzCheckable [nzCheckedKeys]="defaultCheckedKeys"  [(nzData)]="tab.permissions" (nzClick)="nzClick($event)" nzShowIcon="false" >
+    </nz-tree>
+  </nz-tab>
+</nz-tabset>

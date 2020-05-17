@@ -1,0 +1,99 @@
+<nz-page-header nzTitle="用户组管理">
+  <nz-breadcrumb nz-page-header-breadcrumb>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/']">首页</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/identity/roles']">
+    权限管理
+        <!-- \{\{ "role" | translate}} -->
+
+      </a>
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+</nz-page-header>
+
+<nz-card [nzExtra]="extraAction">
+  <ng-template #extraAction>
+    <button nz-button nzSize="large" class="mr-4" (click)="create()" nzType="primary">
+      add
+    </button>
+    <button nz-button nzSize="large" (click)="refresh()">
+      refresh
+    </button>
+  </ng-template>
+
+  <nz-table #dataTable nzShowSizeChanger nzShowPagination [nzFrontPagination]="false" [nzData]="dataItems$ | async"
+    [nzTotal]="pageingInfo.totalItems" [(nzPageSize)]="pageingInfo.pageSize" [(nzPageIndex)]="pageingInfo.pageNumber"
+    [nzLoading]="pageingInfo.isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()">
+    <thead>
+      <tr>
+        <th nzWidth="10vw"></th>
+        <th>Name</th>
+        <th>IsPublic</th>
+        <th>IsDefault</th>
+        <th>isStatic</th>
+        <!-- <th>IsStatic</th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of dataTable.data">
+        <td>
+          <button nz-button nz-dropdown nzType="primary" [nzDropdownMenu]="menu4">
+            <i nz-icon nzType="setting" nzTheme="outline"></i>
+            
+            operational
+            <i nz-icon nzType="down" nzTheme="outline"></i>
+          </button>
+          <nz-dropdown-menu #menu4="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item (click)="edit(item)">
+                <i nz-icon nzType="edit" nzTheme="outline"></i>
+                edit
+            </li>
+              <li nz-menu-item (click)="permissions(item)">
+                <i nz-icon nzType="idcard" nzTheme="fill" ></i>
+                permissions
+              </li>
+              <li nz-menu-item nzType="dangger" (click)="showDeleteConfirm(item)">
+                <i nz-icon nzType="delete" nzTheme="outline"></i>
+                delete
+            </li>
+            </ul>
+          </nz-dropdown-menu>
+          <!-- <button nz-button nz-dropdown nzType="primary" nzTrigger="click" ngTri [nzDropdownMenu]="menu">
+                <i nz-icon nzType="setting" nzTheme="fill"></i>
+                操作
+                <i nz-icon nzType="down"></i>
+            </button>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul nz-menu>
+                    <li nz-menu-item (click)="edit(data)">
+                        edit
+                    </li>
+                    <li nz-menu-divider></li>
+                   <li nz-menu-item (click)="claims(data.id)">Claims</li>
+                    <li nz-menu-divider></li>
+                    <li nz-menu-item (click)="permissions(data)">permissions</li>
+                    <li nz-menu-divider></li>
+                    <li nz-menu-item nz-popconfirm [nzPopconfirmTitle]="'delete.warning'" (nzOnConfirm)="delete(data)" nzPopconfirmPlacement="top">
+                        delete</li>
+                </ul>
+            </nz-dropdown-menu> -->
+        </td>
+        <td>
+          {{item.name}}
+        </td>
+        <td><i nz-icon *ngIf="item.isPublic" [nzType]="'check-circle'" [nzTheme]="'twotone'"
+            [nzTwotoneColor]="'#52c41a'"></i>
+        </td>
+        <td>
+          <i nz-icon *ngIf="item.isDefault" [nzType]="'check-circle'" [nzTheme]="'twotone'"
+            [nzTwotoneColor]="'#52c41a'"></i>
+        </td>
+        <td><i nz-icon *ngIf="item.isStatic" [nzType]="'check-circle'" [nzTheme]="'twotone'"
+            [nzTwotoneColor]="'#52c41a'"></i></td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>

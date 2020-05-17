@@ -12,6 +12,8 @@ import { mergeMap, catchError } from 'rxjs/operators';
 import { getStore } from '../utils/storage';
 import { environment } from 'src/environments/environment';
 import { NzNotificationService } from 'ng-zorro-antd';
+import { IdentityServerLoginResultDto, MallAuthService } from 'src/store/oauth/mallAuth.service';
+import { OAuthService } from 'angular-oauth2-oidc';
 
 const CODEMESSAGE = {
   200: '服务器成功返回请求的数据。',
@@ -33,7 +35,9 @@ const CODEMESSAGE = {
 
 @Injectable()
 export class DefaultInterceptor implements HttpInterceptor {
-  constructor(private injector: Injector) {}
+  constructor(private injector: Injector,
+    // private authService:MallAuthService,
+    private oauthService:OAuthService) {}
 
   private get notification(): NzNotificationService {
     return this.injector.get(NzNotificationService);
@@ -71,16 +75,28 @@ export class DefaultInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     let token = '';
     let __tenant = '';
-    if (getStore('token')) token = 'Bearer ' + getStore('token');
+    let apiReq=false;
+    // if (getStore<IdentityServerLoginResultDto>('token')) token = 'Bearer ' + getStore<IdentityServerLoginResultDto>('token').access_token;
+    if(this.oauthService.getAccessToken())token = 'Bearer ' + this.oauthService.getAccessToken();
     let headers = request.headers.set('Authorization', token);
     let url = request.url;
     if (!url.startsWith('https://') && !url.startsWith('http://')) {
-      if (url.startsWith('/api/')) url = environment.apis.default + url;
+      //if(url.startsWith('/oauth/'))
+      if (url.startsWith('/api/')) {
+        url = environment.apis.default + url;
+        apiReq=true;
+      }else{
+      }
     }
+
+
     let cloneRequest: HttpRequest<any> = request.clone({
       headers,
       url
     });
+    
+    // if(!apiReq)
+    //   return next.handle(cloneRequest);
 
     return next.handle(cloneRequest).pipe(
       mergeMap(res => {

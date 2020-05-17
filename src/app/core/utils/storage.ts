@@ -40,7 +40,12 @@ export function getStore<T>(name: string): T {
   name = prefix + name;
   const content = window.localStorage.getItem(name);
   if (typeof content == "string" && content != undefined)
+  try {
     return JSON.parse(window.localStorage.getItem(name)||null);
+  } catch (error) {
+    ClearStore(name);
+  }
+
 }
 /**
  * 清除Store

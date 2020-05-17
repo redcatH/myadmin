@@ -5,7 +5,14 @@
 export const environment = {
   production: false,
   apis:{
-    default:"http://localhost:44316"
+    default:"https://localhost:44351"
+  },
+  oauth:{
+    issuer:"https://localhost:44351",
+    client_id:"Mall_Web",
+    client_secret:"1q2w3e*",
+    grant_type:"password",
+    scop:"Mall"
   }
 };
 

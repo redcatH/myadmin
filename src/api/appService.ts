@@ -116,68 +116,18 @@ export class LoginProxyService {
 }
 
 @Injectable({ providedIn: 'root' })
-export class OssProxyService {
+export class PublicProxyService {
   constructor(private http: HttpClient) {}
 
   /**
    *
    */
-  sample(): Observable<OssDto> {
-    let url = '/api/Mall/sample';
+  currentUser(): Observable<AppUserDto> {
+    let url = '/api/app/public/currentUser';
     let options: any = {
       method: 'get'
     };
-    return (this.http.request('get', url, options) as any) as Observable<OssDto>;
-  }
-  /**
-   *
-   */
-  authorized(): Observable<OssDto> {
-    let url = '/api/Mall/sample/authorized';
-    let options: any = {
-      method: 'get'
-    };
-    return (this.http.request('get', url, options) as any) as Observable<OssDto>;
-  }
-  /**
-   *
-   */
-  oss(): Observable<OssDto> {
-    let url = '/api/app/oss';
-    let options: any = {
-      method: 'get'
-    };
-    return (this.http.request('get', url, options) as any) as Observable<OssDto>;
-  }
-  /**
-   *
-   */
-  authorized1(): Observable<OssDto> {
-    let url = '/api/app/oss/authorized';
-    let options: any = {
-      method: 'get'
-    };
-    return (this.http.request('get', url, options) as any) as Observable<OssDto>;
-  }
-  /**
-   *
-   */
-  getConfig(): Observable<OssConfigDto> {
-    let url = '/api/app/oss/getConfig';
-    let options: any = {
-      method: 'get'
-    };
-    return (this.http.request('get', url, options) as any) as Observable<OssConfigDto>;
-  }
-  /**
-   *
-   */
-  getToken(): Observable<any> {
-    let url = '/api/app/oss/getToken';
-    let options: any = {
-      method: 'get'
-    };
-    return (this.http.request('get', url, options) as any) as Observable<any>;
+    return (this.http.request('get', url, options) as any) as Observable<AppUserDto>;
   }
 }
 
@@ -642,6 +592,33 @@ export interface ApplicationApiDescriptionModel {
   types?: object;
 }
 
+export interface RemoteServiceValidationErrorInfo {
+  /**  */
+  message?: string;
+
+  /**  */
+  members?: string[];
+}
+
+export interface RemoteServiceErrorInfo {
+  /**  */
+  code?: string;
+
+  /**  */
+  message?: string;
+
+  /**  */
+  details?: string;
+
+  /**  */
+  validationErrors?: RemoteServiceValidationErrorInfo[];
+}
+
+export interface RemoteServiceErrorResponse {
+  /**  */
+  error?: RemoteServiceErrorInfo;
+}
+
 export interface LanguageInfo {
   /**  */
   cultureName?: string;
@@ -717,6 +694,9 @@ export interface ApplicationLocalizationConfigurationDto {
 
   /**  */
   currentCulture?: CurrentCultureDto;
+
+  /**  */
+  defaultResourceName?: string;
 }
 
 export interface ApplicationAuthConfigurationDto {
@@ -767,6 +747,116 @@ export interface CurrentTenantDto {
   isAvailable?: boolean;
 }
 
+export interface LocalizableStringDto {
+  /**  */
+  name?: string;
+
+  /**  */
+  resource?: string;
+}
+
+export interface ExtensionPropertyApiGetDto {
+  /**  */
+  isAvailable?: boolean;
+}
+
+export interface ExtensionPropertyApiCreateDto {
+  /**  */
+  isAvailable?: boolean;
+}
+
+export interface ExtensionPropertyApiUpdateDto {
+  /**  */
+  isAvailable?: boolean;
+}
+
+export interface ExtensionPropertyApiDto {
+  /**  */
+  onGet?: ExtensionPropertyApiGetDto;
+
+  /**  */
+  onCreate?: ExtensionPropertyApiCreateDto;
+
+  /**  */
+  onUpdate?: ExtensionPropertyApiUpdateDto;
+}
+
+export interface ExtensionPropertyUiTableDto {
+  /**  */
+  isVisible?: boolean;
+}
+
+export interface ExtensionPropertyUiFormDto {
+  /**  */
+  isVisible?: boolean;
+}
+
+export interface ExtensionPropertyUiDto {
+  /**  */
+  onTable?: ExtensionPropertyUiTableDto;
+
+  /**  */
+  onCreateForm?: ExtensionPropertyUiFormDto;
+
+  /**  */
+  onEditForm?: ExtensionPropertyUiFormDto;
+}
+
+export interface ExtensionPropertyAttributeDto {
+  /**  */
+  type?: string;
+
+  /**  */
+  typeSimple?: string;
+
+  /**  */
+  configuration?: object;
+}
+
+export interface ExtensionPropertyDto {
+  /**  */
+  type?: string;
+
+  /**  */
+  typeSimple?: string;
+
+  /**  */
+  displayName?: LocalizableStringDto;
+
+  /**  */
+  api?: ExtensionPropertyApiDto;
+
+  /**  */
+  ui?: ExtensionPropertyUiDto;
+
+  /**  */
+  attributes?: ExtensionPropertyAttributeDto[];
+
+  /**  */
+  configuration?: object;
+}
+
+export interface EntityExtensionDto {
+  /**  */
+  properties?: object;
+
+  /**  */
+  configuration?: object;
+}
+
+export interface ModuleExtensionDto {
+  /**  */
+  entities?: object;
+
+  /**  */
+  configuration?: object;
+}
+
+export interface ObjectExtensionsDto {
+  /**  */
+  modules?: object;
+}
+
 export interface ApplicationConfigurationDto {
   /**  */
   localization?: ApplicationLocalizationConfigurationDto;
@@ -788,6 +878,9 @@ export interface ApplicationConfigurationDto {
 
   /**  */
   currentTenant?: CurrentTenantDto;
+
+  /**  */
+  objectExtensions?: ObjectExtensionsDto;
 }
 
 export interface FindTenantResultDto {
@@ -880,31 +973,64 @@ export interface IdentityUserDto {
   extraProperties?: object;
 }
 
-export interface RemoteServiceValidationErrorInfo {
+export interface IValueValidator {
   /**  */
-  message?: string;
+  name?: string;
 
   /**  */
-  members?: string[];
+  properties?: object;
 }
 
-export interface RemoteServiceErrorInfo {
+export interface IStringValueType {
   /**  */
-  code?: string;
+  name?: string;
 
   /**  */
-  message?: string;
+  properties?: object;
 
   /**  */
-  details?: string;
-
-  /**  */
-  validationErrors?: RemoteServiceValidationErrorInfo[];
+  validator?: IValueValidator;
 }
 
-export interface RemoteServiceErrorResponse {
+export interface FeatureDto {
   /**  */
-  error?: RemoteServiceErrorInfo;
+  name?: string;
+
+  /**  */
+  displayName?: string;
+
+  /**  */
+  value?: string;
+
+  /**  */
+  description?: string;
+
+  /**  */
+  valueType?: IStringValueType;
+
+  /**  */
+  depth?: number;
+
+  /**  */
+  parentName?: string;
+}
+
+export interface FeatureListDto {
+  /**  */
+  features?: FeatureDto[];
+}
+
+export interface UpdateFeatureDto {
+  /**  */
+  name?: string;
+
+  /**  */
+  value?: string;
+}
+
+export interface UpdateFeaturesDto {
+  /**  */
+  features?: UpdateFeatureDto[];
 }
 
 export interface UserLoginInfo {
@@ -929,17 +1055,64 @@ export interface AbpLoginResult {
   description?: string;
 }
 
-export interface OssDto {
+export interface ProviderInfoDto {
   /**  */
-  value?: number;
+  providerName?: string;
+
+  /**  */
+  providerKey?: string;
 }
 
-export interface OssConfigDto {
+export interface PermissionGrantInfoDto {
   /**  */
-  uploadHost?: string;
+  name?: string;
 
   /**  */
-  cdnHost?: string;
+  displayName?: string;
+
+  /**  */
+  parentName?: string;
+
+  /**  */
+  isGranted?: boolean;
+
+  /**  */
+  allowedProviders?: string[];
+
+  /**  */
+  grantedProviders?: ProviderInfoDto[];
+}
+
+export interface PermissionGroupDto {
+  /**  */
+  name?: string;
+
+  /**  */
+  displayName?: string;
+
+  /**  */
+  permissions?: PermissionGrantInfoDto[];
+}
+
+export interface GetPermissionListResultDto {
+  /**  */
+  entityDisplayName?: string;
+
+  /**  */
+  groups?: PermissionGroupDto[];
+}
+
+export interface UpdatePermissionDto {
+  /**  */
+  name?: string;
+
+  /**  */
+  isGranted?: boolean;
+}
+
+export interface UpdatePermissionsDto {
+  /**  */
+  permissions?: UpdatePermissionDto[];
 }
 
 export interface ProfileDto {
@@ -988,6 +1161,38 @@ export interface ChangePasswordInput {
 
   /**  */
   newPassword?: string;
+}
+
+export interface AppUserDto {
+  /**  */
+  tenantId?: string;
+
+  /**  */
+  userName?: string;
+
+  /**  */
+  name?: string;
+
+  /**  */
+  surname?: string;
+
+  /**  */
+  email?: string;
+
+  /**  */
+  emailConfirmed?: boolean;
+
+  /**  */
+  phoneNumber?: string;
+
+  /**  */
+  phoneNumberConfirmed?: boolean;
+
+  /**  */
+  nickname?: string;
+
+  /**  */
+  headImgUrl?: string;
 }
 
 export interface IdentityRoleDto {
@@ -1052,6 +1257,47 @@ export interface IdentityRoleUpdateDto {
 
   /**  */
   isPublic?: boolean;
+
+  /**  */
+  extraProperties?: object;
+}
+
+export interface TenantDto {
+  /**  */
+  name?: string;
+
+  /**  */
+  id?: string;
+
+  /**  */
+  extraProperties?: object;
+}
+
+export interface TenantUpdateDto {
+  /**  */
+  name?: string;
+
+  /**  */
+  extraProperties?: object;
+}
+
+export interface TenantDtoPagedResultDto {
+  /**  */
+  totalCount?: number;
+
+  /**  */
+  items?: TenantDto[];
+}
+
+export interface TenantCreateDto {
+  /**  */
+  adminEmailAddress?: string;
+
+  /**  */
+  adminPassword?: string;
+
+  /**  */
+  name?: string;
 
   /**  */
   extraProperties?: object;

@@ -1,17 +1,17 @@
 import { fakeAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { LUpdateImageComponent } from './l-update-image.component';
+import { TestuploadComponent } from './testupload.component';
 
-describe('LUpdateImageComponent', () => {
-  let component: LUpdateImageComponent;
-  let fixture: ComponentFixture<LUpdateImageComponent>;
+describe('TestuploadComponent', () => {
+  let component: TestuploadComponent;
+  let fixture: ComponentFixture<TestuploadComponent>;
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ LUpdateImageComponent ]
+      declarations: [ TestuploadComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(LUpdateImageComponent);
+    fixture = TestBed.createComponent(TestuploadComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
