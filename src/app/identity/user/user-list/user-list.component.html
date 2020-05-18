@@ -1,0 +1,75 @@
+<nz-page-header nzTitle="用户管理">
+  <nz-breadcrumb nz-page-header-breadcrumb>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/']">首页</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a [routerLink]="['/identity/roles']">
+        权限管理
+        <!-- \{\{ "role" | translate}} -->
+
+      </a>
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+</nz-page-header>
+
+<nz-card [nzExtra]="extraAction">
+  <ng-template #extraAction>
+    <button nz-button nzSize="large" class="mr-4" (click)="create()" nzType="primary">
+      add
+    </button>
+    <button nz-button nzSize="large" (click)="refresh()">
+      refresh
+    </button>
+  </ng-template>
+
+  <nz-table #dataTable nzShowSizeChanger nzShowPagination [nzFrontPagination]="false" [nzData]="dataItems"
+    [nzTotal]="pageingInfo.totalItems" [(nzPageSize)]="pageingInfo.pageSize" [(nzPageIndex)]="pageingInfo.pageNumber"
+    [nzLoading]="pageingInfo.isTableLoading" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()">
+    <thead>
+      <tr>
+        <th nzWidth="10vw"></th>
+        <th>userName</th>
+        <th>email</th>
+        <th>phoneNumber</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of dataTable.data">
+        <td>
+          <button nz-button nz-dropdown nzType="primary" [nzDropdownMenu]="menu4">
+            <i nz-icon nzType="setting" nzTheme="outline"></i>
+            operational
+            <i nz-icon nzType="down" nzTheme="outline"></i>
+          </button>
+          <nz-dropdown-menu #menu4="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item (click)="edit(item)">
+                <i nz-icon nzType="edit" nzTheme="outline"></i>
+                edit
+              </li>
+              <li nz-menu-item (click)="permissions(item)">
+                <i nz-icon nzType="idcard" nzTheme="fill"></i>
+                permissions
+              </li>
+              <li nz-menu-item nzType="dangger" (click)="showDeleteConfirm(item)">
+                <i nz-icon nzType="delete" nzTheme="outline"></i>
+                delete
+              </li>
+            </ul>
+          </nz-dropdown-menu>
+        </td>
+        <td>
+          {{item.userName}}
+        </td>
+        <td>
+          {{item.email}}
+        </td>
+        <td>
+          {{item.phoneNumber}}
+        </td>
+
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>

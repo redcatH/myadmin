@@ -1,4 +1,13 @@
-import { Component, OnInit, ViewChild, Input, Output } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  Input,
+  Output,
+  ViewChildren,
+  QueryList,
+  ViewContainerRef
+} from '@angular/core';
 import {
   NzTabPosition,
   NzTreeComponent,
@@ -8,7 +17,10 @@ import {
   NzTabSetComponent
 } from 'ng-zorro-antd';
 import { PermissionService } from '../store/permissions.service';
-import { PermissionListResultDto } from '../Model/permissionModel';
+import {
+  PermissionListResultDto,
+  PermissionGrantInfoDto
+} from '../Model/permissionModel';
 import { from, merge } from 'rxjs';
 import { ViewPermissionGroup } from '../Model/permissionViewModel';
 import { permissionQuery } from '../store/permissions.query';
@@ -21,6 +33,7 @@ import { map, tap, mergeMap } from 'rxjs/operators';
 })
 export class PermissionsComponent implements OnInit {
   @ViewChild('tabs', { static: true }) tabs: NzTabSetComponent;
+  @ViewChildren(NzTreeComponent) trees: QueryList<NzTreeComponent>;
   checked: boolean = false;
   position: NzTabPosition = 'left';
   // tabs = [1, 2, 3];
@@ -34,13 +47,15 @@ export class PermissionsComponent implements OnInit {
   permissionModel: any[] = [];
   @Input() providerName: string;
   @Input() providerKey: string;
-
+  defaultTreeNodeKeys: PermissionGrantInfoDto[] = [];
   constructor(
     private permissionApi: PermissionService,
     private permissionQuery: permissionQuery
   ) {}
 
   ngOnInit(): void {
+    //this.defaultTreeNodeKeys.length=0;
+
     this.permissionApi
       .get(this.providerName, this.providerKey)
       .subscribe(() => {
@@ -81,7 +96,7 @@ export class PermissionsComponent implements OnInit {
               }
             ];
           });
-          
+
           //初始化选中的权限
           this.permissionQuery.permissionGroup$
             .pipe(
@@ -91,20 +106,42 @@ export class PermissionsComponent implements OnInit {
             )
             .subscribe(r => {
               if (r.isGranted != undefined) {
-                if (r.isGranted && r.parentName != null) //r.parentName != null 这里是为了不设置根节点 让他有半选中状态
+                if (r.isGranted && r.parentName != null) {
+                  //r.parentName != null 这里是为了不设置根节点 让他有半选中状态
                   this.defaultCheckedKeys.push('' + r.name);
+                }
+                this.defaultTreeNodeKeys.push(r);
               }
             });
         });
       });
   }
 
-  CheckBoxChange(e){
-    console.log(e)
+  CheckBoxChange(e) {
+    console.log(e);
+  }
+
+  testClick() {
+    this.defaultTreeNodeKeys.forEach(item => {
+      this.trees.forEach(t => {
+        let tempT = t.getTreeNodeByKey(item.name);
+        if (tempT == null) return;
+        if (tempT.isChecked != item.isGranted) {
+          if(tempT.children.length>0){
+            if (tempT.isHalfChecked != item.isGranted)
+              console.log('父节点改变：' + item.name);
+          }else{
+            console.log('子节点改变' + item.name);
+          }
+        }
+      });
+    });
+    // this.trees.forEach(item=>{
+    //   var c=item.getTreeNodes();
+    //   console.log(c);
+    // })
   }
   clickChecked(e) {
-    // console.log(this.tabs.nzSelectedIndex);
-
     this.permissionModel[
       this.tabs.nzSelectedIndex
     ].permissions = this.permissionModel[
@@ -117,7 +154,6 @@ export class PermissionsComponent implements OnInit {
       });
       return p;
     });
-    console.log(this.permissionModel[this.tabs.nzSelectedIndex]);
   }
   //为了外部访问
   @ViewChild('NzTabComponent', { static: true })
@@ -186,5 +222,4 @@ export class PermissionsComponent implements OnInit {
       // this.nzTreeComponent.getExpandedNodeList()
       ();
   }
-
 }

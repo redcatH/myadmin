@@ -36,14 +36,13 @@ export class PermissionsProxyService {
       /**  */
       providerKey?: string;
       /** requestBody */
-      body?: UpdatePermissionsDto;
-    } = {} as any
+    } = {} as any, body: UpdatePermissionsDto
   ): Observable<any> {
     let url = '/api/abp/permissions';
     const _copy: any = { ...params };
     let options: any = {
       params: new HttpParams({ fromObject: _copy }),
-      body: params.body,
+      body: body,
       method: 'put'
     };
     return (this.http.request('put', url, options) as any) as Observable<any>;

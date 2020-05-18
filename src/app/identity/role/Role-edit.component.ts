@@ -83,7 +83,6 @@ export class RoleEditComponent implements OnInit {
       isDefault: [],
       isPublic: []
     });
-
     //It looks like you're using ngModel on the same form field as formControlName.
     // Support for using the ngModel input property and ngModelChange event with
     // reactive form directives has been deprecated in Angular v6 and will be removed

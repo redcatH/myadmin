@@ -59,9 +59,9 @@ export class PermissionService {
       /**  */
       providerKey?: string;
       /** requestBody */
-      body?: UpdatePermissionsDto;
-    } = {} as any
+      
+    } = {} as any,body: UpdatePermissionsDto
   ): Observable<void> {
-    return this.api.updatePermissions(params);
+    return this.api.updatePermissions(params,body);
   }
 }

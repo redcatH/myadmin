@@ -8,6 +8,8 @@ import { Observable, from } from 'rxjs';
 import { RolePrivateProxyService } from '../identityApi';
 import { map } from 'rxjs/operators';
 import { PermissionsComponent } from '../permissions/permissions.component';
+import { PermissionService } from '../store/permissions.service';
+import { UpdatePermissionsDto } from '../Model/permissionModel';
 
 @Component({
   selector: 'app-role-list',
@@ -29,6 +31,7 @@ export class RoleListComponent implements OnInit {
     private api: RolePrivateProxyService,
     private identityService:IdentityService,
     private identityQuery:IdentityQuery,
+    private permissionService:PermissionService
     // private modal: NzModalService
   ) {
 
@@ -72,7 +75,6 @@ export class RoleListComponent implements OnInit {
 
   guid = '00000000-0000-0000-0000-000000000000';
   create(){
-
       const modal = this.modalService.create({
         nzTitle: 'New Role',
         nzContent: RoleEditComponent,
@@ -124,7 +126,7 @@ export class RoleListComponent implements OnInit {
                   id:item.id,
                   body: instance.roleDto
                 }).subscribe(res => {
-                  this.message.success("编程成功");
+                  this.message.success("修改成功");
                   this.refresh();
                   modal.destroy();
                 })
@@ -176,17 +178,40 @@ export class RoleListComponent implements OnInit {
             label: '确定',
             type: "primary",
             onClick: instance => {
-              console.log("componentInstance", instance);
-              console.log(instance.defaultCheckedKeys);
-              console.log()
-              // if (instance.validateForm.valid) {
-              //   this.api.createRole({
-              //     body: instance.roleDto
-              //   }).subscribe(res => {
-              //     this.message.success("修改成功");
-              modal.destroy();
-              //   })
-              // }
+              let permissions:UpdatePermissionsDto={
+                permissions:[]
+              };
+              
+              instance.defaultTreeNodeKeys.forEach(item => {
+                instance.trees.forEach(t => {
+                  let tempT = t.getTreeNodeByKey(item.name);
+                  if (tempT == null) return;
+                  if (tempT.isChecked != item.isGranted) {
+                    if(tempT.children.length>0){
+                      if (tempT.isHalfChecked != item.isGranted){
+                        //console.log('父节点改变：' + item.name);
+                        permissions.permissions.push({
+                          name:item.name,
+                          isGranted:tempT.isHalfChecked
+                        })
+                      }
+                    }else{
+                      permissions.permissions.push({
+                        name:item.name,
+                        isGranted:tempT.isChecked
+                      })
+                      //console.log('子节点改变' + item.name);
+                    }
+                  }
+                });
+              });
+              this.permissionService.Update({
+                providerName:"R",
+                providerKey:item.name,
+                },permissions).subscribe(()=>{
+                  this.message.success("修改成功");
+                });
+              console.log(permissions);
             }
           }
         ]

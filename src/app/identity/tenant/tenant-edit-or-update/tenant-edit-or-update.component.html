@@ -1,0 +1,27 @@
+<form nz-form #f="ngForm" [formGroup]="validateForm">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="5">Role Name</nz-form-label>
+    <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Tenant Name is Required"
+      nzWarningTip="please input Tenant Name">
+      <input nz-input formControlName="name" required />
+    </nz-form-control>
+  </nz-form-item>
+  <div *ngIf="options!='update'">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="5">Email</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="adminEmailAddress is Required"
+        nzWarningTip="please input adminEmailAddress">
+        <input nz-input formControlName="adminEmailAddress" required email/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="5">Password</nz-form-label>
+      <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="adminPassword is Required"
+        nzWarningTip="please input adminPassword">
+        <input type="password" nz-input formControlName="adminPassword" required />
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+
+</form>

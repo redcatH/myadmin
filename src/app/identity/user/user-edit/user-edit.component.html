@@ -1,0 +1,39 @@
+<nz-tabset>
+  <nz-tab nzTitle="User Information">
+    <form nz-form [formGroup]="validateForm">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5">User Name</nz-form-label>
+        <nz-form-control nzHasFeedback [nzSpan]="12">
+          <input nz-input formControlName="userName" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5">Password</nz-form-label>
+        <nz-form-control [nzSpan]="12">
+          <input nz-input formControlName="password" type="password"/>
+          <!-- <nz-input-group [nzSuffix]="suffixTemplate">
+            <input [type]="'password'" nz-input placeholder="input password" formControl="password" />
+          </nz-input-group>
+          <ng-template #suffixTemplate>
+            <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+              (click)="passwordVisible = !passwordVisible"></i>
+          </ng-template> -->
+
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5">Email</nz-form-label>
+        <nz-form-control nzHasFeedback [nzSpan]="12">
+
+          <input nz-input formControlName="email" email required/>
+        </nz-form-control>
+
+
+
+      </nz-form-item>
+    </form>
+  </nz-tab>
+  <nz-tab nzTitle="Roles">
+    <nz-checkbox-group [(ngModel)]="rolesCheckboxData" (ngModelChange)="log(checkOptionsOne)"></nz-checkbox-group>
+  </nz-tab>
+</nz-tabset>

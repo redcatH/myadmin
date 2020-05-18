@@ -24,6 +24,16 @@ export const menu = [
         text: '用户组管理',
         link: '/identity/roles',
         icon: 'usergroup-delete'
+      },
+      {
+        text: '用户管理',
+        link: '/identity/users',
+        icon: 'user'
+      },
+      {
+        text: '租户管理',
+        link: '/identity/tenants',
+        icon: 'key'
       }
     ]
   }
